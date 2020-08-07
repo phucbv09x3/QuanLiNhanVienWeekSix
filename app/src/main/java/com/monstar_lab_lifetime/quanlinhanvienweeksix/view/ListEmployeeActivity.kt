@@ -31,16 +31,14 @@ class ListEmployeeActivity : AppCompatActivity(), OnItemClick {
     private var mRetrofit: Retrofit? = null
     private var service: EmployeeRepository? = null
     private var mListEmployee = mutableListOf<Employee>()
-    companion object{
-        const val KEY_BUNDLE="BUNDLE"
-    }
+    private val REQUES_CODE=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_employee)
         rcy_listEmployee.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         mRetrofit = Retrofit.Builder()
-            .baseUrl("http://dummy.restapiexample.com")
+            .baseUrl("http://dummy.restapiexample.com/api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         service = mRetrofit?.create(EmployeeRepository::class.java)
@@ -48,7 +46,7 @@ class ListEmployeeActivity : AppCompatActivity(), OnItemClick {
         getList()
         btn_add.setOnClickListener {
             val intentAdd = Intent(this, AddEmployeeActivity::class.java)
-            startActivityForResult(intentAdd, 1)
+            startActivityForResult(intentAdd, REQUES_CODE)
         }
 
 
@@ -75,7 +73,7 @@ class ListEmployeeActivity : AppCompatActivity(), OnItemClick {
 
                     Log.d("Tag", list.toString())
                     list?.let {
-                        mAdapter.setList(list)
+                        mAdapter.setList(it)
                     }
                 }
 
@@ -100,7 +98,7 @@ class ListEmployeeActivity : AppCompatActivity(), OnItemClick {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1) {
+        if (requestCode == REQUES_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 data?.let {
                     val dataId = data.getStringExtra(AddEmployeeActivity.DATA_ID).toInt()
@@ -111,6 +109,7 @@ class ListEmployeeActivity : AppCompatActivity(), OnItemClick {
                         ?.enqueue(object : Callback<APIResponse> {
                             override fun onFailure(call: Call<APIResponse>, t: Throwable) {
 
+                                Toast.makeText(this@ListEmployeeActivity,t.toString(),Toast.LENGTH_LONG).show()
                             }
 
                             override fun onResponse(
@@ -123,12 +122,13 @@ class ListEmployeeActivity : AppCompatActivity(), OnItemClick {
                                         response.body()?.message,
                                         Toast.LENGTH_LONG
                                     ).show()
-                                    Log.d("phuc",response.body().toString())
+                                    Log.d("p",response.body().toString())
                                 }
                             }
 
                         })
-                    mListEmployee.add(Employee(dataId,dataName,dataAge,dataSalary))
+                   // val lisssst= mutableListOf(dataId,dataName,dataAge,dataSalary) as MutableList<Employee>
+                   mListEmployee.add(Employee(dataId,dataName,dataAge,dataSalary))
                     mAdapter.setList(mListEmployee)
                 }
 

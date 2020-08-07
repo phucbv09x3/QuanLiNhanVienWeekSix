@@ -11,11 +11,13 @@ import retrofit2.http.POST
 import java.util.*
 
 interface EmployeeRepository {
-    @GET("/api/v1/employees")
+    @GET("employees/")
     fun getListEmployee()  :retrofit2.Call<APIResponse>
 
-    @POST("/api/v1/create")
-    fun postEmployee(@Field("name") employee_name:String,
+    @POST("create/")
+    @FormUrlEncoded
+    fun postEmployee(
+        @Field("name") employee_name:String,
     @Field("age") employee_age:Int,
     @Field("salary") employee_salary:Long): retrofit2.Call<APIResponse>
 
