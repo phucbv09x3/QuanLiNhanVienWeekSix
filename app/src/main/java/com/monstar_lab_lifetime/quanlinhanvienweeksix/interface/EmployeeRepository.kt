@@ -1,24 +1,21 @@
 package com.monstar_lab_lifetime.quanlinhanvienweeksix.`interface`
 
-import android.telecom.Call
+import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.APIResponePost
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.APIResponse
-import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.Employee
-import io.reactivex.Observable
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
-import java.util.*
+import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.EmployPost
+import retrofit2.http.*
+
 
 interface EmployeeRepository {
     @GET("employees/")
-    fun getListEmployee()  :retrofit2.Call<APIResponse>
+    fun getListEmployee(): retrofit2.Call<APIResponse>
 
-    @POST("create/")
-    @FormUrlEncoded
+    @POST("create")
     fun postEmployee(
-        @Field("name") employee_name:String,
-    @Field("age") employee_age:Int,
-    @Field("salary") employee_salary:Long): retrofit2.Call<APIResponse>
+        @Body
+        data: EmployPost
+    ): retrofit2.Call<APIResponePost>
+    @DELETE("delete/{id}")
+    fun deletePost(@Path("id") id: Int): retrofit2.Call<APIResponePost>
 
 }

@@ -11,7 +11,7 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
         val intent=intent
         val bundle=intent.extras
-        val id=bundle?.getInt("KEY1",0)
+       val id=bundle?.getInt("KEY1",0)
         val name=bundle?.getString("KEY2","")
         val age=bundle?.getInt("KEY3",0)
         val salary=bundle?.getLong("KEY4",0)
