@@ -10,12 +10,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.R
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.`interface`.OnItemClick
-import com.monstar_lab_lifetime.quanlinhanvienweeksix.`interface`.OnLongClick
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.Contact
 
 class ContactAdapter(val onItemClick: OnItemClick) :
     RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
-    var onLongClick: OnLongClick? = null
     private var mListContact: MutableList<Contact> = mutableListOf()
     fun setList(mListContact: MutableList<Contact>) {
         this.mListContact = mListContact
