@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.monstar_lab_lifetime.quanlinhanvienweeksix">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".view.AddEmployeeActivity"></activity>
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".view.UpdateActivity"/>
+        <activity android:name=".apinew.view.MainActivity" />
+        <activity android:name=".view.AddContactActivity" />
         <activity android:name=".view.DetailActivity" />
-        <activity android:name=".view.ListEmployeeActivity">
+        <activity android:name=".view.ListContactActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
