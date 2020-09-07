@@ -1,11 +1,14 @@
-package com.monstar_lab_lifetime.quanlinhanvienweeksix.`interface`
+package com.monstar_lab_lifetime.quanlinhanvienweeksix.repository
 
+import android.database.Observable
+import androidx.lifecycle.MutableLiveData
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.*
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.Contacts
 import retrofit2.http.*
 
 
 interface APIContactRepository {
+
     //
     @Headers(
         value = ["Accept: application/json",
@@ -13,7 +16,7 @@ interface APIContactRepository {
             "autopilotapikey:043886198dab40f294966e5d481c2f78"]
     )
     @GET("contacts/bookmark")
-    fun getListContact(): retrofit2.Call<Contacts>
+    fun getListContact(): io.reactivex.Observable<Contacts>///retrofit2.Call<Contacts>
     //
 
 
@@ -27,7 +30,7 @@ interface APIContactRepository {
     fun postContact(
         @Body
         data: ContactsPost
-    ): retrofit2.Call<ContactsPost>
+    ): io.reactivex.Observable<ContactsPost>
     //
 
 

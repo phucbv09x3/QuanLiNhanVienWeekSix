@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="itemContact"
+            type="com.monstar_lab_lifetime.quanlinhanvienweeksix.model.Contact" />
+    </data>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item"
@@ -19,7 +25,7 @@
         android:id="@+id/tv_showNameCt"
         android:layout_width="0dp"
         android:layout_height="50dp"
-
+        android:text="@{itemContact.lastName}"
         android:textColor="#000000"
         android:textSize="24dp"
         android:gravity="center"
@@ -34,6 +40,7 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:ellipsize="end"
+        android:text="@{itemContact.email}"
         android:maxLines="1"
         android:textColor="#000000"
         android:textSize="24dp"
@@ -61,3 +68,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

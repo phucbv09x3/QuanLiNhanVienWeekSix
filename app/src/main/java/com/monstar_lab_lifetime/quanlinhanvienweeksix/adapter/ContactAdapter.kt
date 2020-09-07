@@ -4,12 +4,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.R
-import com.monstar_lab_lifetime.quanlinhanvienweeksix.`interface`.OnItemClick
+import com.monstar_lab_lifetime.quanlinhanvienweeksix.Interface.OnItemClick
+import com.monstar_lab_lifetime.quanlinhanvienweeksix.databinding.ItemContactBinding
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.Contact
 
 class ContactAdapter(val onItemClick: OnItemClick) :
@@ -17,7 +16,6 @@ class ContactAdapter(val onItemClick: OnItemClick) :
     private var mListContact: MutableList<Contact> = mutableListOf()
     fun setList(mListContact: MutableList<Contact>) {
         this.mListContact = mListContact
-        Log.d("tag1", mListContact.toString())
         notifyDataSetChanged()
     }
 
@@ -25,8 +23,9 @@ class ContactAdapter(val onItemClick: OnItemClick) :
         parent: ViewGroup,
         viewType: Int
     ): ContactViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false)
-        return ContactViewHolder(view)
+        val binding=ItemContactBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        //val view = LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false)
+        return ContactViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -34,24 +33,35 @@ class ContactAdapter(val onItemClick: OnItemClick) :
     }
 
     override fun onBindViewHolder(holder: ContactAdapter.ContactViewHolder, position: Int) {
-        val contact = mListContact[position]
-
-        holder.name.text = (contact.lastName)
-        holder.mail.text = contact.email
-        holder.itemView.setOnClickListener {
-            onItemClick.OnItemClick(contact, position)
+        var contact=mListContact[position]
+       holder.binding.itemContact=contact
+        holder.binding.root.setOnClickListener {
+            onItemClick.onItemClick(contact,position)
         }
-
-
-        holder.itemView.setOnLongClickListener {
-            onItemClick.onLongClick(contact, position)
+        holder.binding.root.setOnLongClickListener {
+            onItemClick.onLongClick(contact,holder.adapterPosition)
             return@setOnLongClickListener true
         }
+        holder.binding.item.setOnLongClickListener {
+            onItemClick.onLongClick(contact,holder.adapterPosition)
+            return@setOnLongClickListener true
+        }
+//        holder.itemView.setOnClickListener {
+//            onItemClick.onItemClick(contact, position)
+//        }
+//
+//        holder.itemView.setOnLongClickListener {
+//            onItemClick.onLongClick(contact, position)
+//            return@setOnLongClickListener true
+//        }
     }
 
-    class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name = itemView.findViewById(R.id.tv_showNameCt) as TextView
-        val mail = itemView.findViewById<TextView>(R.id.tv_showMailct)
+    class ContactViewHolder : RecyclerView.ViewHolder{
+
+        val binding :ItemContactBinding
+        constructor(binding: ItemContactBinding) : super(binding.root) {
+            this.binding = binding
+        }
 
 
     }

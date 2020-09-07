@@ -13,7 +13,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".view.UpdateActivity"/>
-        <activity android:name=".apinew.view.MainActivity" />
         <activity android:name=".view.AddContactActivity" />
         <activity android:name=".view.DetailActivity" />
         <activity android:name=".view.ListContactActivity">
