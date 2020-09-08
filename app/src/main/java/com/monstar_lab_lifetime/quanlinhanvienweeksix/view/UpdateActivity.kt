@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.R
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.adapter.ContactAdapter
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.databinding.ActivityListContactBinding
+import com.monstar_lab_lifetime.quanlinhanvienweeksix.databinding.ActivityUpdateBinding
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.repository.APIContactRepository
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.Contact
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.ContactPost
@@ -31,29 +32,43 @@ class UpdateActivity : AppCompatActivity() {
     private var mRetrofit: Retrofit? = null
     private var mContact: APIContactRepository? = null
 
-    private lateinit var binding: ActivityListContactBinding
+    private lateinit var binding: ActivityUpdateBinding
     private lateinit var model: ContactViewModel
     private var mDispose: Disposable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       binding=DataBindingUtil.setContentView(this,R.layout.activity_update)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_update)
 
-        model= ContactViewModel()
+        model = ContactViewModel()
 
 //        binding.rcyListContact.apply {
 //            layoutManager= LinearLayoutManager(this@UpdateActivity)
 //            adapter= ContactAdapter(this@UpdateActivity)
 //        }
-        binding.data=model
-        binding.lifecycleOwner=this
+        // binding.data=model
+        val data = intent
+        val bundle = data.extras
+        val email = bundle!!.getString("KEY1", "")
+        tv_showNameUpdate.setText(email)
+        binding.lifecycleOwner = this
 
         btn_update.setOnClickListener {
-            mDispose=model.postContact(ContactsPost(ContactPost(edt_firstNameUpdate.text.toString()
-                ,edt_lastNameUpdate.text.toString(),tv_showNameUpdate.text.toString(),Custom("xin chao"))))
+            mDispose = model.postContact(
+                ContactsPost(
+                    ContactPost(
+                        edt_firstNameUpdate.text.toString()
+                        ,
+                        edt_lastNameUpdate.text.toString(),
+                        tv_showNameUpdate.text.toString(),
+                        Custom("xin chao")
+                    )
+                )
+            )
 
-            model.contact.observe(this, object :androidx.lifecycle.Observer<MutableList<Contact>> {
+            model.contact.observe(this, object : androidx.lifecycle.Observer<MutableList<Contact>> {
                 override fun onChanged(t: MutableList<Contact>?) {
-                    ((binding.rcyListContact.adapter as ListContactActivity)as ContactAdapter).setList(t!!)
+                    //((binding as ListContactActivity) as ContactAdapter).setList(t!!)
+                    finish()
                 }
 
             })

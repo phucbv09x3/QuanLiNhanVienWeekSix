@@ -56,9 +56,6 @@ class ListContactActivity : AppCompatActivity(),
         }
         binding.data = model
         binding.lifecycleOwner = this
-
-       getList()
-
         btn_add.setOnClickListener {
             val intentAdd = Intent(this, AddContactActivity::class.java)
             startActivityForResult(intentAdd, REQUES_CODE)
@@ -89,7 +86,7 @@ class ListContactActivity : AppCompatActivity(),
     override fun onItemClick(contacts: Contact, position: Int) {
         val intent = Intent(this, DetailActivity::class.java)
         val bundle = Bundle()
-        bundle.putString("KEY1", contacts.name)
+        bundle.putString("KEY1", contacts.lastName)
         bundle.putString("KEY2", contacts.email)
         bundle.putString("KEY3", contacts.contactId)
         intent.putExtras(bundle)
@@ -131,6 +128,8 @@ class ListContactActivity : AppCompatActivity(),
                             )
                         )
                     )
+
+
                 }
             }
         }
