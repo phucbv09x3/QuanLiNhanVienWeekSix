@@ -6,16 +6,12 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
-import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.R
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.repository.APIContactRepository
@@ -81,10 +77,10 @@ class ListContactActivity : AppCompatActivity(),
     }
 
     private fun searchName() {
-        var mL = mutableListOf<Contact>()
+        var mutableListCreateNew = mutableListOf<Contact>()
         mListGet.forEachIndexed { index, contact ->
             if (mListGet[index].lastName.equals(edt_text.text.toString().trim())) {
-                mL?.add(
+                mutableListCreateNew?.add(
                     Contact(
                         mListGet[index].email,
                         mListGet[index].createdAt,
@@ -98,7 +94,7 @@ class ListContactActivity : AppCompatActivity(),
                     )
                 )
             }
-            (binding.rcyListContact.adapter as ContactAdapter).setList(mL)
+            (binding.rcyListContact.adapter as ContactAdapter).setList(mutableListCreateNew)
         }
     }
 
