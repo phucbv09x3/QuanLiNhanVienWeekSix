@@ -4,13 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.R
-import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.Contact
 import kotlinx.android.synthetic.main.activity_add_employee.*
 
 class AddContactActivity : AppCompatActivity() {
@@ -52,8 +50,8 @@ class AddContactActivity : AppCompatActivity() {
         btn_acceptAdd.setOnClickListener {
             if (edt_mail.text.toString().trim().matches(mEmail.toRegex())){
                 val data = Intent()
-                data?.putExtra(DATA_FIRST, edt_firstNameUpdate.text.toString())
-                data?.putExtra(DATA_LAST, edt_lastNameUpdate.text.toString())
+                data?.putExtra(DATA_FIRST, edt_firstName.text.toString())
+                data?.putExtra(DATA_LAST, edt_lastName.text.toString())
                 data?.putExtra(DATA_MAIL, edt_mail.text.toString())
                 setResult(Activity.RESULT_OK, data)
                 finish()

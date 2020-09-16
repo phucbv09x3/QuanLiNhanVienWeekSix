@@ -17,7 +17,7 @@ class DetailActivity : AppCompatActivity() {
         val mail = bundle?.getString("KEY2", "")
         val contactId = bundle?.getString("KEY3", "")
         this.mText=contactId
-        tv_showNameUpdate.setText(name)
+        tv_showNameUpdateT.setText(name)
         tv_showMail.text=mail
         tv_showId.text=contactId
     }

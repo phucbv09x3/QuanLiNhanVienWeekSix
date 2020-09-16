@@ -19,10 +19,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/edt_firstNameUpdate"
+        android:id="@+id/edt_firstName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
         android:layout_marginLeft="10dp"
         android:layout_marginTop="40dp"
         android:hint="FirtName"
@@ -35,7 +34,6 @@
     <TextView
         android:id="@+id/lastName"
         android:layout_width="110dp"
-
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="25dp"
@@ -46,8 +44,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_firstName" />
 
     <EditText
-        android:id="@+id/edt_lastNameUpdate"
-
+        android:id="@+id/edt_lastName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -62,7 +59,6 @@
     <TextView
         android:id="@+id/tv_age"
         android:layout_width="110dp"
-
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="25dp"
@@ -88,7 +84,6 @@
             android:layout_marginLeft="10dp"
             android:baselineAligned="false"
             android:hint="EMAIL ADDRESS"
-
             android:inputType="textEmailAddress"
             android:textColorHint="#000000"
             android:textSize="15dp" />

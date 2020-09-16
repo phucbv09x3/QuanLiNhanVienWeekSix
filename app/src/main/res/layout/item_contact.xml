@@ -65,6 +65,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.98" />
+    <Button
+        android:text="xóa"
+        android:id="@+id/bt"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/tv_showNameCt"
+        app:layout_constraintLeft_toRightOf="@id/tv_showNameCt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

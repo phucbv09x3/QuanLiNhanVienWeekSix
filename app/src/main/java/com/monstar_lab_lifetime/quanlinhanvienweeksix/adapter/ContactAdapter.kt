@@ -19,6 +19,11 @@ class ContactAdapter(val onItemClick: OnItemClick) :
         notifyDataSetChanged()
     }
 
+    fun clear(mListContact: MutableList<Contact>){
+        mListContact.clear()
+        this.mListContact=mListContact
+        notifyDataSetChanged()
+    }
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -35,17 +40,19 @@ class ContactAdapter(val onItemClick: OnItemClick) :
     override fun onBindViewHolder(holder: ContactAdapter.ContactViewHolder, position: Int) {
         var contact=mListContact[position]
        holder.binding.itemContact=contact
+       // holder.binding.bt.visibility=View.GONE
         holder.binding.root.setOnClickListener {
-            onItemClick.onItemClick(contact,position)
+
+            onItemClick.onItemClick(contact,holder.adapterPosition)
         }
         holder.binding.root.setOnLongClickListener {
             onItemClick.onLongClick(contact,holder.adapterPosition)
             return@setOnLongClickListener true
         }
-        holder.binding.item.setOnLongClickListener {
-            onItemClick.onLongClick(contact,holder.adapterPosition)
-            return@setOnLongClickListener true
-        }
+//        holder.binding.item.setOnLongClickListener {
+//            onItemClick.onLongClick(contact,holder.adapterPosition)
+//            return@setOnLongClickListener true
+//        }
 //        holder.itemView.setOnClickListener {
 //            onItemClick.onItemClick(contact, position)
 //        }
@@ -57,12 +64,10 @@ class ContactAdapter(val onItemClick: OnItemClick) :
     }
 
     class ContactViewHolder : RecyclerView.ViewHolder{
-
         val binding :ItemContactBinding
         constructor(binding: ItemContactBinding) : super(binding.root) {
             this.binding = binding
         }
-
 
     }
 }
