@@ -6,11 +6,17 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.R
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.repository.APIContactRepository
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.Interface.OnItemClick
@@ -23,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_list_contact.*
 import retrofit2.*
 
 class ListContactActivity : AppCompatActivity(),
-    OnItemClick {
+    OnItemClick, View.OnClickListener {
     // var isLoading = ObservableBoolean(false)
     private var mAdapter = ContactAdapter(this)
     private var mRetrofit: Retrofit? = null
@@ -36,12 +42,12 @@ class ListContactActivity : AppCompatActivity(),
         private const val REQUEST_CODE = 0
     }
 
-    private var mTextError:String=""
-     var data = MutableLiveData<MutableList<Contact>>()
+    private var mTextError: String = ""
+    var data = MutableLiveData<MutableList<Contact>>()
     lateinit var binding: ActivityListContactBinding
     lateinit var contactViewModel: ContactViewModel
 
-    //var mDispose: Disposable? = null
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list_contact)
@@ -57,13 +63,50 @@ class ListContactActivity : AppCompatActivity(),
             startActivityForResult(intentAdd, REQUEST_CODE)
         }
         getList()
+        reLoad()
+        btn_search.setOnClickListener(this)
+
+    }
+    private fun reLoad(){
+        mSwipeRefreshLayout = findViewById(R.id.sw_reload)
+        mSwipeRefreshLayout.setOnRefreshListener {
+            mSwipeRefreshLayout.post(object : Runnable {
+                override fun run() {
+                    (binding.rcyListContact.adapter as ContactAdapter).setList(mListGet)
+                    mSwipeRefreshLayout.isRefreshing = false
+                }
+
+            })
+        }
+    }
+
+    private fun searchName() {
+        var mL = mutableListOf<Contact>()
+        mListGet.forEachIndexed { index, contact ->
+            if (mListGet[index].lastName.equals(edt_text.text.toString().trim())) {
+                mL?.add(
+                    Contact(
+                        mListGet[index].email,
+                        mListGet[index].createdAt,
+                        mListGet[index].updatedAt,
+                        mListGet[index].apiOriginated,
+                        mListGet[index].customFields,
+                        mListGet[index].name,
+                        mListGet[index].lastName,
+                        mListGet[index].firstName,
+                        mListGet[index].contactId
+                    )
+                )
+            }
+            (binding.rcyListContact.adapter as ContactAdapter).setList(mL)
+        }
     }
 
     private fun getList() {
 
         var alertDialog = AlertDialog.Builder(this).create()
-        // alertDialog.setTitle("***")
-        alertDialog.setMessage("Đang tải dữ liệu...")
+        alertDialog.setTitle("Loading")
+        alertDialog.setMessage("Vui lòng chờ...")
 
 //        alertDialog.setButton(-1,"Ẩn thông báo này") {dialog: DialogInterface?, which: Int ->
 //           //-1 là định danh của  DialogInterface.BUTTON_POSITIVE
@@ -72,7 +115,14 @@ class ListContactActivity : AppCompatActivity(),
         var calll = contactViewModel.getContactVM()
         contactViewModel.contact.observe(this, Observer<MutableList<Contact>> {
             it?.let {
+                this.mListGet = it
                 (binding.rcyListContact.adapter as ContactAdapter).setList(it)
+            }
+        })
+        contactViewModel.resultAPI.observe(this, Observer<String> {
+            if (it == "errorGetList") {
+                Toast.makeText(this, "Lỗi cập nhật ! Vui lòng thử lại sau !!", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
         contactViewModel.isBoolean.observe(this, Observer<Boolean> {
@@ -83,18 +133,6 @@ class ListContactActivity : AppCompatActivity(),
 
 
     }
-
-//    private fun getList() {
-//        mDispose = mModel.getContact()
-//        mModel.contact.observe(this,
-//            Observer<MutableList<Contact>> {
-//                it?.let {
-//                    (binding.rcyListContact.adapter as ContactAdapter).setList(it)
-//                    this.mListGet = it
-//                }
-//            }
-//        )
-//    }
 
     override fun onItemClick(contacts: Contact, position: Int) {
         val intent = Intent(this, DetailActivity::class.java)
@@ -117,7 +155,6 @@ class ListContactActivity : AppCompatActivity(),
             startActivityForResult(intent, 9)
         }
         dialog.setNegativeButton("Xóa") { dialog, which ->
-
             var alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setTitle("Load....")
             contactViewModel.deleteContactVM(contact.contactId)
@@ -126,11 +163,16 @@ class ListContactActivity : AppCompatActivity(),
                     alertDialog.dismiss()
                 }
             })
+            contactViewModel.resultAPI.observe(this, Observer<String> {
+                if (it == "errorDelete") {
+                    Toast.makeText(this, "Lỗi ! Vui lòng thử lại sau !!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
             alertDialog.setButton(-1, "Hủy") { dialog, which ->
                 contactViewModel.callDel.cancel()
             }
             alertDialog.show()
-
         }
         dialog.show()
     }
@@ -164,8 +206,12 @@ class ListContactActivity : AppCompatActivity(),
                         }
                     })
                     contactViewModel.resultAPI.observe(this, Observer<String> {
-                        if (it == "errorPost"){
-                            Toast.makeText(this,"Error !!",Toast.LENGTH_SHORT).show()
+                        if (it == "errorPost") {
+                            Toast.makeText(
+                                this,
+                                "Lỗi  ! Vui lòng thử lại sau !!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     })
 
@@ -200,6 +246,15 @@ class ListContactActivity : AppCompatActivity(),
                             alertDialog.dismiss()
                         }
                     })
+                    contactViewModel.resultAPI.observe(this, Observer<String> {
+                        if (it == "errorPost") {
+                            Toast.makeText(
+                                this,
+                                "Lỗi  ! Vui lòng thử lại sau !!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
                     alertDialog.setButton(-1, "Hủy") { dialog, which ->
                         contactViewModel.callPost.cancel()
                     }
@@ -207,52 +262,14 @@ class ListContactActivity : AppCompatActivity(),
                 }
             }
         }
+    }
 
-//    private fun delete() {
-//        val myCallback = object : ItemTouchHelper.SimpleCallback(
-//            0,
-//            ItemTouchHelper.LEFT
-//        ) {
-//            override fun onMove(
-//                recyclerView: RecyclerView,
-//                viewHolder: RecyclerView.ViewHolder,
-//                target: RecyclerView.ViewHolder
-//            ): Boolean = false
-//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//                val position: Int = viewHolder.adapterPosition
-//                binding.root.bt.visibility= View.VISIBLE
-////                val callDel = mContact?.deletePost(mListContact[position].contactId!!)
-////                callDel!!.enqueue(object : Callback<Contacts> {
-////                    override fun onFailure(call: Call<Contacts>, t: Throwable) {
-////                        Toast.makeText(
-////                            applicationContext,
-////                            "Error Delete : +${t.message}",
-////                            Toast.LENGTH_LONG
-////                        )
-////                            .show()
-////                        getList()
-////                    }
-////
-////                    override fun onResponse(
-////                        call: Call<Contacts>,
-////                        response: Response<Contacts>
-////                    ) {
-////                        if (response.isSuccessful) {
-////                            this@ListContactActivity.mListContact = response.body()!!.contacts
-////
-////                            Toast.makeText(applicationContext, "Success", Toast.LENGTH_LONG).show()
-////                        }
-////                    }
-////                }
-//                //)
-//               // mListContact.removeAt(position)
-//                mAdapter.notifyDataSetChanged()
-//            }
-//        }
-//        val itemTouchHelper = ItemTouchHelper(myCallback)
-//        itemTouchHelper.attachToRecyclerView(rcy_listContact)
-//        mAdapter.setList(mListContact)
-//    }
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.btn_search -> {
+                searchName()
+            }
+        }
     }
 
 

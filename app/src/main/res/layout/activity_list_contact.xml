@@ -18,31 +18,37 @@
         tools:context=".view.ListContactActivity">
 
 
-<!--        <EditText-->
-<!--            android:layout_marginLeft="3dp"-->
-<!--            android:id="@+id/edt_text"-->
-<!--            android:hint="Nhập tên muốn tìm kiếm !"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintLeft_toLeftOf="parent"-->
-<!--            app:layout_constraintRight_toLeftOf="@id/btn_search"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="50dp"/>-->
-<!--        <Button-->
-<!--            android:id="@+id/btn_search"-->
-<!--            android:text="Search"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintRight_toRightOf="parent"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="40dp"/>-->
+        <EditText
+            android:layout_marginLeft="3dp"
+            android:id="@+id/edt_text"
+            android:hint="Nhập tên muốn tìm kiếm !"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/btn_search"
+            android:layout_width="0dp"
+            android:layout_height="50dp"/>
+        <Button
+            android:id="@+id/btn_search"
+            android:text="Search"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcy_listContact"
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/sw_reload"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toBottomOf="@id/edt_text"
+            android:layout_height="0dp">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcy_listContact"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_text"  />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"

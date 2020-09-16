@@ -2,6 +2,7 @@ package com.monstar_lab_lifetime.quanlinhanvienweeksix.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.Contact
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.ContactPost
@@ -18,13 +19,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ContactViewModel : ViewModel() {
-    //    var isLoading = ObservableBoolean(false)
     var isBoolean: MutableLiveData<Boolean> = MutableLiveData(true)
     var mAPIRepository: APIContactRepository
     var contact = MutableLiveData<MutableList<Contact>>()
     var contactPost = MutableLiveData<ContactPost>()
     var resultAPI: MutableLiveData<String> = MutableLiveData("start")
-    var messageError: MutableLiveData<String> = MutableLiveData()
     lateinit var callPost: Call<ContactsPost>
     lateinit var callDel: Call<Contacts>
 
@@ -53,8 +52,8 @@ class ContactViewModel : ViewModel() {
         call.enqueue(object : Callback<Contacts> {
             override fun onFailure(call: Call<Contacts>, t: Throwable) {
                 isBoolean.value = false
+                resultAPI.value="errorGetList"
             }
-
             override fun onResponse(call: Call<Contacts>, response: retrofit2.Response<Contacts>) {
                 contact.value = response.body()?.contacts
                 isBoolean.value = false
@@ -73,8 +72,6 @@ class ContactViewModel : ViewModel() {
             override fun onFailure(call: Call<ContactsPost>, t: Throwable) {
                 isBoolean.value = false
                 resultAPI.value = "errorPost"
-                messageError.value = t.toString()
-
             }
 
             override fun onResponse(
@@ -101,6 +98,7 @@ class ContactViewModel : ViewModel() {
         call.enqueue(object : Callback<Contacts> {
             override fun onFailure(call: Call<Contacts>, t: Throwable) {
                 isBoolean.value = false
+                resultAPI.value="errorDelete"
             }
 
             override fun onResponse(call: Call<Contacts>, response: retrofit2.Response<Contacts>) {

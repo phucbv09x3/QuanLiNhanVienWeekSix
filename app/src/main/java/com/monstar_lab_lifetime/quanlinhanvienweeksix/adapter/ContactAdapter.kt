@@ -1,22 +1,28 @@
 package com.monstar_lab_lifetime.quanlinhanvienweeksix.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.monstar_lab_lifetime.quanlinhanvienweeksix.R
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.Interface.OnItemClick
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.databinding.ItemContactBinding
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.Contact
+import java.util.concurrent.CopyOnWriteArrayList
 
 class ContactAdapter(val onItemClick: OnItemClick) :
     RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
     private var mListContact: MutableList<Contact> = mutableListOf()
     fun setList(mListContact: MutableList<Contact>) {
         this.mListContact = mListContact
+        sortContactByLastName(mListContact)
         notifyDataSetChanged()
+    }
+    fun sortContactByLastName(mListContact: MutableList<Contact>){
+        this.mListContact=mListContact
+        mListContact?.let {
+            it.sortWith(
+                compareBy { it!!.lastName.toLowerCase() }
+            )
+        }
     }
 
     fun clear(mListContact: MutableList<Contact>){
@@ -40,9 +46,7 @@ class ContactAdapter(val onItemClick: OnItemClick) :
     override fun onBindViewHolder(holder: ContactAdapter.ContactViewHolder, position: Int) {
         var contact=mListContact[position]
        holder.binding.itemContact=contact
-       // holder.binding.bt.visibility=View.GONE
         holder.binding.root.setOnClickListener {
-
             onItemClick.onItemClick(contact,holder.adapterPosition)
         }
         holder.binding.root.setOnLongClickListener {
