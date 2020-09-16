@@ -30,10 +30,14 @@
         <Button
             android:id="@+id/btn_search"
             android:text="Search"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/custom_background"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/edt_text"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"/>
+            android:layout_height="0dp"/>
 
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
