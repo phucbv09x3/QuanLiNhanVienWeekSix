@@ -9,6 +9,7 @@ import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.ContactPost
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.Contacts
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.model.ContactsPost
 import com.monstar_lab_lifetime.quanlinhanvienweeksix.repository.APIContactRepository
+import kotlinx.android.synthetic.main.activity_list_contact.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -22,6 +23,7 @@ class ContactViewModel : ViewModel() {
     var isBoolean: MutableLiveData<Boolean> = MutableLiveData(true)
     var mAPIRepository: APIContactRepository
     var contact = MutableLiveData<MutableList<Contact>>()
+    var contactNew = MutableLiveData<MutableList<Contact>>()
     var contactPost = MutableLiveData<ContactPost>()
     var resultAPI: MutableLiveData<String> = MutableLiveData("start")
     lateinit var callPost: Call<ContactsPost>
@@ -46,14 +48,52 @@ class ContactViewModel : ViewModel() {
             .build().create(APIContactRepository::class.java)
     }
 
+//    fun search(name: String) {
+//        isBoolean.value = true
+//        val call = mAPIRepository.getListContact()
+//        call.enqueue(object : Callback<Contacts> {
+//            override fun onFailure(call: Call<Contacts>, t: Throwable) {
+//                isBoolean.value = false
+//                resultAPI.value = "errorGetList"
+//            }
+//
+//            override fun onResponse(call: Call<Contacts>, response: retrofit2.Response<Contacts>) {
+//                contact.value = response.body()?.contacts
+//
+//                val m=contact.value
+//                m?.forEachIndexed { index, contact ->
+//                    if (m[index].lastName.equals(name)) {
+//                        m?.add(
+//                            Contact(
+//                                m[index].email,
+//                                m[index].createdAt,
+//                                m[index].updatedAt,
+//                                m[index].apiOriginated,
+//                                m[index].customFields,
+//                                m[index].name,
+//                                m[index].lastName,
+//                                m[index].firstName,
+//                                m[index].contactId
+//                            )
+//                        )
+//                    }
+//                }
+//                contactNew.value=m
+//                isBoolean.value = false
+//            }
+//
+//        })
+//    }
+
     fun getContactVM() {
         isBoolean.value = true
         val call = mAPIRepository.getListContact()
         call.enqueue(object : Callback<Contacts> {
             override fun onFailure(call: Call<Contacts>, t: Throwable) {
                 isBoolean.value = false
-                resultAPI.value="errorGetList"
+                resultAPI.value = "errorGetList"
             }
+
             override fun onResponse(call: Call<Contacts>, response: retrofit2.Response<Contacts>) {
                 contact.value = response.body()?.contacts
                 isBoolean.value = false
@@ -98,7 +138,7 @@ class ContactViewModel : ViewModel() {
         call.enqueue(object : Callback<Contacts> {
             override fun onFailure(call: Call<Contacts>, t: Throwable) {
                 isBoolean.value = false
-                resultAPI.value="errorDelete"
+                resultAPI.value = "errorDelete"
             }
 
             override fun onResponse(call: Call<Contacts>, response: retrofit2.Response<Contacts>) {

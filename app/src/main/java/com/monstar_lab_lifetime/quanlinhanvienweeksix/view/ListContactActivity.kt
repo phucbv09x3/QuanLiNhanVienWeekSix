@@ -62,7 +62,17 @@ class ListContactActivity : AppCompatActivity(),
         reLoad()
         btn_search.setOnClickListener(this)
 
+
     }
+//    fun tik(){
+//        //contactViewModel.search(edt_text.text.toString().trim())
+//        contactViewModel.contactNew.observe(this, Observer<MutableList<Contact>> {
+//            it?.let {
+//                (binding.rcyListContact.adapter as ContactAdapter).setList(it)
+//            }
+//        })
+//
+//    }
     private fun reLoad(){
         mSwipeRefreshLayout = findViewById(R.id.sw_reload)
         mSwipeRefreshLayout.setOnRefreshListener {
@@ -108,7 +118,7 @@ class ListContactActivity : AppCompatActivity(),
 //           //-1 là định danh của  DialogInterface.BUTTON_POSITIVE
 //        }
         alertDialog.show()
-        var calll = contactViewModel.getContactVM()
+        contactViewModel.getContactVM()
         contactViewModel.contact.observe(this, Observer<MutableList<Contact>> {
             it?.let {
                 this.mListGet = it
@@ -142,7 +152,7 @@ class ListContactActivity : AppCompatActivity(),
 
     override fun onLongClick(contact: Contact, position: Int) {
         val dialog = AlertDialog.Builder(this)
-        dialog.setTitle("Bạn có muốn chỉnh sửa hay xóa!")
+        dialog.setTitle("Bạn muốn chỉnh sửa hay xóa!")
         dialog.setPositiveButton("Chỉnh sửa") { dialog: DialogInterface, which: Int ->
             val intent = Intent(this, UpdateActivity::class.java)
             val bundle = Bundle()
@@ -264,6 +274,7 @@ class ListContactActivity : AppCompatActivity(),
         when (v?.id) {
             R.id.btn_search -> {
                 searchName()
+                //tik()
             }
         }
     }
